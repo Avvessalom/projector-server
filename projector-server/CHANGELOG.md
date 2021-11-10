@@ -1,13 +1,20 @@
+# Unreleased
+
+## Added
+
+- PRJ-20 Synchronization between drawing to different surfaces
+
 # 1.5.0
 
 ## Added
-- Server forbids Idea platform updates and plugins updates notifications. 
-  This behaviour can be changed via ORG_JETBRAINS_PROJECTOR_SERVER_DISABLE_IDEA_UPDATES property.
+
+- Server forbids Idea platform updates and plugins updates notifications. This behaviour can be changed via
+  ORG_JETBRAINS_PROJECTOR_SERVER_DISABLE_IDEA_UPDATES property.
 - PRJ-157 Support WINDOW_ACTIVATED and WINDOW_DEACTIVATED events which are required for file sync in IDE
 - PRJ-226 PRJ-530 Support for displaying markdown preview with plugin versions 203-212
 - Support for displaying markdown preview in headless mode when JavaFX and Jcef are not available
 - Composition symbols are now styled as real symbols before them
-- PRJ-332 Disable IDE restarts. 
+- PRJ-332 Disable IDE restarts.
 
 ## Changed
 - Update JetBrains Mono to v2.242
