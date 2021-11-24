@@ -239,6 +239,9 @@ internal class GraphicsTransformer : ClassFileTransformer {
     private val DRAW_HANDLER_CLASS_LOADING = """
       Class prjClassLoaderClazz = ClassLoader.getSystemClassLoader().loadClass("$PROJECTOR_CLASS_LOADER_NAME");
       ClassLoader loader = (ClassLoader) prjClassLoaderClazz.getDeclaredMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
+      ClassLoader loader = (ClassLoader) prjClassLoaderClazz.getDeclaredMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
+      ClassLoader loader = (ClassLoader) prjClassLoaderClazz.getDeclaredMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
+      ClassLoader loader = (ClassLoader) prjClassLoaderClazz.getDeclaredMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
       Class clazz = loader.loadClass("$DRAW_HANDLER_CLASS");
     """.trimIndent()
 
