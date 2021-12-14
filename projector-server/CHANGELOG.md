@@ -1,14 +1,19 @@
 # Unreleased
 
+## Added
+
+- PRJ-20 Synchronization between drawing to different surfaces
+
 ## Fixed
 
 - Support mono fonts without "mono" in their names (useful when building Projector with fonts other than JB Mono)
 - PRJ-443 Remove "Allow popups for this site" alert when allowance is not needed
-- PRJ-770 Update GotIt message position if widget is moved
+- PRJ-60 Not pixel perfect popups position
 
 ## Changed
 
 - Remove green decoration of the web browser
+- PRJ-199 Support native double buffering
 
 # 1.5.0
 

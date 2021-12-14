@@ -54,10 +54,7 @@ import org.jetbrains.projector.server.core.ij.md.PanelUpdater
 import org.jetbrains.projector.server.core.protocol.HandshakeTypesSelector
 import org.jetbrains.projector.server.core.protocol.KotlinxJsonToClientHandshakeEncoder
 import org.jetbrains.projector.server.core.protocol.KotlinxJsonToServerHandshakeDecoder
-import org.jetbrains.projector.server.core.util.LaterInvokator
-import org.jetbrains.projector.server.core.util.focusOwnerOrTarget
-import org.jetbrains.projector.server.core.util.getOption
-import org.jetbrains.projector.server.core.util.getWildcardHostAddress
+import org.jetbrains.projector.server.core.util.*
 import org.jetbrains.projector.server.idea.CaretInfoUpdater
 import org.jetbrains.projector.server.idea.forbidUpdates
 import org.jetbrains.projector.server.service.ProjectorAwtInitializer
@@ -232,6 +229,20 @@ class ProjectorServer private constructor(
         val dataToSend = createDataToSend()  // creating data even if there are no clients to avoid memory leaks
         sendPictures(dataToSend)
 
+        dataToSend
+          .distinctUpdatedOnscreenSurfaces()
+          .map { it to listOf(Flush) }
+          // don't call SwingUtilities.invokeLater when unneeded. also, we shouldn't touch EDT too early because it's overridden by IJ and
+          // this results in multiple EDT living at the same time, creating nasty exceptions like "no ComponentUI class for":
+          .takeIf { it.isNotEmpty() }
+          ?.let {
+            SwingUtilities.invokeLater {
+              // create FLUSH commands: we can flush for sure when no other painting is in progress,
+              // and seems like it's when all operations in EDT are finished and a new one is started
+              ProjectorDrawEventQueue.commands.addAll(it)
+            }
+          }
+
         sleep(10)
       }
       catch (ex: InterruptedException) {
@@ -273,16 +284,7 @@ class ProjectorServer private constructor(
 
     calculateMainWindowShift()
 
-    val drawCommands = ProjectorDrawEventQueue.getQueues()
-      .filter { it.commands.isNotEmpty() }
-      .map { queue ->
-        val drawEvents: List<List<ServerWindowEvent>> = extractData(queue.commands)
-
-        ServerDrawCommandsEvent(
-          target = queue.target,
-          drawEvents = drawEvents.convertToSimpleList()
-        )
-      }
+    val drawCommands = extractData(ProjectorDrawEventQueue.commands).shrinkEvents()
 
     val windows = PWindow.windows
       .mapIndexed { i, window ->
@@ -298,7 +300,11 @@ class ProjectorServer private constructor(
           resizable = window.resizable,
           modal = window.modal,
           undecorated = window.undecorated,
-          windowType = window.windowType
+          windowType = window.windowType,
+          windowClass = window.windowClass,
+          isAutoRequestFocus = window.isAutoRequestFocus,
+          isAlwaysOnTop = window.isAlwaysOnTop,
+          parentId = window.parentWindow?.id,
         )
       }
 
@@ -644,9 +650,11 @@ class ProjectorServer private constructor(
 
     if (hasWriteAccess) {
       PGraphicsEnvironment.clientDoesWindowManagement = toServerHandshakeEvent.clientDoesWindowManagement
-      PGraphicsEnvironment.setupDisplays(
-        toServerHandshakeEvent.displays.map { Rectangle(it.x, it.y, it.width, it.height) to it.scaleFactor })
-      with(toServerHandshakeEvent.displays[0]) { resize(width, height) }
+      SwingUtilities.invokeAndWait {
+        PGraphicsEnvironment.setupDisplays(
+          toServerHandshakeEvent.displays.map { Rectangle(it.x, it.y, it.width, it.height) to it.scaleFactor })
+        with(toServerHandshakeEvent.displays[0]) { resize(width, height) }
+      }
     }
 
     clientEventHandler.updateClientsCount()

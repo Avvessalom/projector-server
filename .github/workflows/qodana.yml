@@ -4,15 +4,16 @@ on:
   pull_request:
     types: [ assigned, opened, synchronize, reopened ]
     branches: [ master ]
-  workflow_dispatch:
 
 jobs:
-  qodana:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          java-version: 11
+          distribution: temurin
 
       - name: Cache Qodana dependencies
         uses: actions/cache@v2
@@ -35,3 +36,4 @@ jobs:
       - uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: ${{ github.workspace }}/qodana/qodana.sarif.json
+          
