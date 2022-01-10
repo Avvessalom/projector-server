@@ -23,3 +23,4 @@ jobs:
             ./*.properties
             ./projector-plugin/src/main/resources/META-INF/plugin.xml
             ./**/*.html
+            ./gradlew
