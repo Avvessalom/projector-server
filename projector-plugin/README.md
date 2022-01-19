@@ -44,3 +44,4 @@ latest release starting with `agent-...` and find the plugin in Assets there.
 ## Installing zip file
 
 Install the plugin (the zip file) into IntelliJ-based IDE via `Gear Icon | Install plugin from disk...` menu item in Plugins settings.
+
