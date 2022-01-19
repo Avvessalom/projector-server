@@ -109,6 +109,8 @@ class ProjectorServer private constructor(
   private val ideaColors = IdeColors { colors ->
     windowColorsEvent = ServerWindowColorsEvent(colors)
   }
+  val mem = "mem"
+  val kek = "kek"
 
   init {
     PanelUpdater.showCallback = { id, show ->

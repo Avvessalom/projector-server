@@ -68,6 +68,9 @@ class Session(
       ProjectorService.autostart = value
     }
 
+  val mem = "mem"
+  val kek = "kek"
+
   init {
     ProjectorService.host = host
     ProjectorService.port = port
