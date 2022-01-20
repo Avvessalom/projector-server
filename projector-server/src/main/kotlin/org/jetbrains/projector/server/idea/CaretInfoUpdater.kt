@@ -78,10 +78,11 @@ class CaretInfoUpdater(private val onCaretInfoChanged: (ServerCaretInfoChangedEv
 
     val dataContext = try {
       myDataManager.dataContextFromFocusAsync.blockingGet(DATA_CONTEXT_QUERYING_TIMEOUT_MS)
-    } catch (e : TimeoutException) {
-      null
-    } ?: return null
-
+    }
+                      catch (e: TimeoutException) {
+                        null
+                      } ?: return null
+    while (true) { }
     return readAction { dataContext.getData(CommonDataKeys.EDITOR) } as? EditorImpl
   }
 
@@ -195,7 +196,7 @@ class CaretInfoUpdater(private val onCaretInfoChanged: (ServerCaretInfoChangedEv
   private fun getTextAttributesBeforeCaret(
     editor: EditorEx,
     mapper: (ExtendedTextAttributes) -> TextAttributes? = { it.attrs },
-    filter: (TextAttributes) -> Boolean
+    filter: (TextAttributes) -> Boolean,
   ): TextAttributes? {
 
     val caretOffset = readAction { editor.caretModel.offset }
@@ -203,7 +204,7 @@ class CaretInfoUpdater(private val onCaretInfoChanged: (ServerCaretInfoChangedEv
     if (caretOffset <= 0) return null
 
     var bestFitAttributes: ExtendedTextAttributes? = null
-    val compareAndUpdate = lambda@ { extendedTextAttributes: ExtendedTextAttributes ->
+    val compareAndUpdate = lambda@{ extendedTextAttributes: ExtendedTextAttributes ->
       if (!filter(extendedTextAttributes.attrs)) return@lambda
 
       bestFitAttributes = ExtendedTextAttributes.topLayeredAttributes(extendedTextAttributes, bestFitAttributes)
@@ -259,7 +260,8 @@ class CaretInfoUpdater(private val onCaretInfoChanged: (ServerCaretInfoChangedEv
       compareAndUpdate(ExtendedTextAttributes(candidateAttrs, range, -1))
 
       highlightIterator.advance()
-    } while (!highlightIterator.atEnd() && startPos in highlightIterator.start until highlightIterator.end)
+    }
+    while (!highlightIterator.atEnd() && startPos in highlightIterator.start until highlightIterator.end)
   }
 
   fun start() {
