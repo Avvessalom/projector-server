@@ -26,7 +26,10 @@ import java.nio.file.Paths
 plugins {
   kotlin("jvm")
   id("org.jetbrains.intellij")
+  jacoco
 }
+
+setupJacoco()
 
 val kotlinVersion: String by project
 val projectorClientVersion: String by project
@@ -52,8 +55,9 @@ tasks.publishPlugin {
   jvmArgs = jvmArgs.orEmpty() + listOf("-Djdk.attach.allowAttachSelf=true", "-Dswing.bufferPerWindow=false")
 }
 
-abstract class GenerateVersionsFile: DefaultTask() {
+abstract class GenerateVersionsFile : DefaultTask() {
   private val filePath = "src/main/resources/META-INF/pluginVersions.txt"
+
   @get:Input
   abstract val agentVersion: Property<String>
 

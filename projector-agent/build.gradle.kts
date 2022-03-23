@@ -27,9 +27,11 @@ import java.util.*
 plugins {
   kotlin("jvm")
   `maven-publish`
+  jacoco
 }
 
 publishToSpace()
+setupJacoco()
 
 val agentClassName = "org.jetbrains.projector.agent.MainAgent"
 val kotlinVersion: String by project

@@ -48,6 +48,8 @@ jobs:
         restore-keys: ${{ runner.os }}-gradle
     - name: Clean
       run: ./gradlew clean
+    - name: Add JVM args for gradle
+      run: echo org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=512m >> gradle.properties
     - name: Run Tests and analyze
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
