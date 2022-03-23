@@ -28,13 +28,14 @@ plugins {
   id("org.jetbrains.intellij")
 }
 
-
+val kotlinVersion: String by project
 val projectorClientVersion: String by project
 val projectorClientGroup: String by project
 
 dependencies {
   implementation("$projectorClientGroup:projector-server-core:$projectorClientVersion")
   implementation(project(":projector-agent"))
+  testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 intellij {

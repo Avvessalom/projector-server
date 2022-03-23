@@ -32,6 +32,7 @@ plugins {
 publishToSpace()
 
 val agentClassName = "org.jetbrains.projector.agent.MainAgent"
+val kotlinVersion: String by project
 val launcherClassName = "org.jetbrains.projector.agent.AgentLauncher"
 version = project(":projector-plugin").version
 
@@ -51,6 +52,7 @@ dependencies {
   api(project(":projector-awt"))
   api(project(":projector-server"))
   implementation("org.javassist:javassist:$javassistVersion")
+  testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 // todo: undestand why `tasks.jar` doesn't work when executing runWithAgent and runIdeaWithAgent:
