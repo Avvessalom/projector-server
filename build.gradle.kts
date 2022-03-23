@@ -27,6 +27,15 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
 plugins {
   kotlin("jvm") apply false
   `maven-publish`
+  id("org.sonarqube")
+}
+
+sonarqube {
+  properties {
+    property("sonar.projectKey", "Avvessalom_projector-server")
+    property("sonar.organization", "avvessalom")
+    property("sonar.host.url", "https://sonarcloud.io")
+  }
 }
 
 val kotlinVersion: String by project
@@ -34,6 +43,15 @@ val targetJvm: String by project
 
 subprojects {
   group = "org.jetbrains.projector"
+
+  sonarqube {
+    properties {
+      property("sonar.sources", "src/main")
+      property("sonar.tests", "src/test")
+      //property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+      property("sonar.host.url", "https://sonarcloud.io")
+    }
+  }
 
   repositories {
     mavenCentral()
