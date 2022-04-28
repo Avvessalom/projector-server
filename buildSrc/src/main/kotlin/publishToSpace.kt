@@ -44,7 +44,7 @@ public fun Project.publishToSpace() {
       }
     }
     repositories {
-      maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies") {
+      maven("https://packages.jetbrains.team/maven/p/prj/projector-maven") {
         credentials(PasswordCredentials::class)
       }
     }
