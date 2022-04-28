@@ -23,7 +23,6 @@ jobs:
         run: |
           echo projectorClientGroup=org.jetbrains.projector >> gradle.properties
           echo version=$(echo ${{ github.sha }} | head -c 8) >> projector-plugin/gradle.properties
-          echo version=$(echo ${{ github.sha }} | head -c 8) >> projector-server-common/gradle.properties
       - name: Clean
         run: ./gradlew clean
       - name: Publish to space
